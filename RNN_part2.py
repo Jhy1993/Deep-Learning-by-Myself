@@ -45,6 +45,24 @@ class RNNNumpy:
     def calculate_loss(self, x, y):
         N = np.sum((len(y_i) for y_i in y))
         return self.calculate_total_loss(x, y) / N
+
+    def bptt(self, x, y):
+        T = len(y)
+        o, s = self.forward_propagation(x)
+        # grandient
+        dLdU = np.zeros(self.U.shape)
+        dLdV = np.zeros(self.V.shape)
+        dLdW = np.zeros(self.W.shape)
+        delta_o = o
+        delta_o[np.arange(len(y)), y] -= 1
+        for t in np.arange(T)[::-1]:
+            dLdV +=np.outer(delta_o[t], s[t].T)
+            delta_t = np.dot(self.V.T, delta_o[t]) * tanh_prime(s[t])
+            for bptt_step in np.arange(max(0, t-bptt_truncate), t+1)[::-1]:
+        pass
         
+def tanh_prime(s):
+    s_p = 1 - s**2
+    return s_p
 
         
