@@ -19,7 +19,7 @@ class RNNNumpy:
         T = len(x)
         s = np.zeros((T + 1, self.hidden_dim))
         s[-1] = np.zeros(self.hidden_dim)
-        #=============
+        #=============????????????????????????
         #output-o
         o = np.zeros((T, self.word_dim))
         for i in np.arange(T):
@@ -38,8 +38,13 @@ class RNNNumpy:
         for i in np.arange(len(y)):
             o, s = self.forward_propagation(x[i])
             correct_predict = o[np.arange(len(y[i])), y[i]]
-            
+#===========????????????????
+            L += -1 * np.sum(np.log(correct_predict))
+        return L
 
-        pass
+    def calculate_loss(self, x, y):
+        N = np.sum((len(y_i) for y_i in y))
+        return self.calculate_total_loss(x, y) / N
+        
 
         
