@@ -1,5 +1,5 @@
 '''
-RNN part 2
+RNN part 23
 '''
 import numpy as np
 class RNNNumpy:
