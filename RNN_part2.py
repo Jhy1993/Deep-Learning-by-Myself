@@ -1,4 +1,5 @@
 '''
+ mysef
 RNN part 23
 '''
 import numpy as np
