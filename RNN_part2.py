@@ -1,17 +1,13 @@
 '''
- mysef
-RNN part 23
+RNN 
 '''
 import numpy as np
 class RNNNumpy:
     """docstring for RNNNumpy"""
     def __init__(self, word_dim, hidden_dim=100, bptt_truncate=4):
-
-
         self.word_dim = word_dim
         self.hidden_dim = hidden_dim
         self.bptt_truncate = bptt_truncate
-
         self.U = np.random.uniform(-np.sqrt(1./word_dim), np.sqrt(1./word_dim), (hidden_dim, word_dim))
         self.V = np.random.uniform(-np.sqrt(1./hidden_dim), np.sqrt(1./hidden_dim), (word_dim, hidden_dim))
         self.W = np.random.uniform(-np.sqrt(1./hidden_dim), np.sqrt(1./hidden_dim), (hidden_dim, hidden_dim))
@@ -28,11 +24,9 @@ class RNNNumpy:
             o[t] = softmax(np.dot(self.V, s[t]))
         return [o, s]
 
-
     def predict(self, x):
         o, s = self.forward_propagation(x)
         return np.argmax(o, axis=1)
-
 
     def calculate_total_loss(self, x, y):
         L = 0
@@ -60,6 +54,7 @@ class RNNNumpy:
             dLdV +=np.outer(delta_o[t], s[t].T)
             delta_t = np.dot(self.V.T, delta_o[t]) * tanh_prime(s[t])
             for bptt_step in np.arange(max(0, t-bptt_truncate), t+1)[::-1]:
+                dLdW +=
         pass
         
 def tanh_prime(s):
