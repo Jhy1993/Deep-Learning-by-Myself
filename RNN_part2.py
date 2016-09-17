@@ -1,5 +1,14 @@
 '''
 RNN 
+1. Initial 
+2. forward_propagation
+3. calculate_total_loss -> calculate_loss
+4. bptt
+5. gradient_check
+6. numpy_sgd_step
+7. train_with_sgd
+utils:
+1. tanh_prime
 '''
 import numpy as np
 class RNNNumpy:
@@ -44,7 +53,7 @@ class RNNNumpy:
     def bptt(self, x, y):
         T = len(y)
         o, s = self.forward_propagation(x)
-        # grandient
+        # gradient
         dLdU = np.zeros(self.U.shape)
         dLdV = np.zeros(self.V.shape)
         dLdW = np.zeros(self.W.shape)
@@ -54,9 +63,25 @@ class RNNNumpy:
             dLdV +=np.outer(delta_o[t], s[t].T)
             delta_t = np.dot(self.V.T, delta_o[t]) * tanh_prime(s[t])
             for bptt_step in np.arange(max(0, t-bptt_truncate), t+1)[::-1]:
-                dLdW +=
+                dLdW += np.outer(delta_t, s[bptt_step-1])
+                dLdU[:, x[bptt_step]] += delta_t
+                delta_t = np.dot(self.W.T, delta_t) * tanh_prime(s[bptt_step-1])
+        return [dLdU, dLdV, dLdW]
+
+    def gradient_check(self, x, y, h=0.001, error_threshold=0.01):
+        bptt_gradients = self.bptt(x, y)
+        model_parameters = ['U', 'V', 'W']
+        for pidx, pname in enumerate(model_parameters):
+            print pidx, pname
         pass
-        
+
+    def numpy_sgd_step(self, x, y, learning_rate):
+        dLdU, dLdV, dLdW = self.bptt(x, y)
+        self.U -= learning_rate * dLdU
+        self.V -= learning_rate * dLdV
+        self.W -= learning_rate * dLdW
+
+
 def tanh_prime(s):
     s_p = 1 - s**2
     return s_p
