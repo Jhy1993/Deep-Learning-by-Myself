@@ -81,7 +81,15 @@ class RNNNumpy:
         self.V -= learning_rate * dLdV
         self.W -= learning_rate * dLdW
 
-
+    def train_with_sgd(model, X_train, y_train, 
+                    learning_rate=0.005, nepoch=100, evaluate_loss_after=5):
+        losses = []
+        num_examples_seen = 0
+        for epoch in range(nepoch):
+            for i in range(len(y_train)):
+                model.sgd_step(X_train[i], y_train[i], learning_rate)
+                num_examples_seen += 1
+        pass
 def tanh_prime(s):
     s_p = 1 - s**2
     return s_p

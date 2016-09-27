@@ -3,6 +3,20 @@ Michael Nielsen
 
 Version：1.0 Simple Neural Network
 '''
+
+import cPickle
+import gzip
+#======================== Load the MNIST data=========================================
+def load_data():
+    
+    f = gzip.open('C:\\Users\\Jhy1993\\Desktop\\Deep-Learning-by-Myself\\data\\mnist.pkl.gz', 'rb')
+    training_data, validation_data, test_data = cPickle.load(f)
+    f.close()
+    return (training_data, validation_data, test_data)
+
+a,b,c = load_data()
+'''
+#=======================================N N==============================================
 class Network(object):
     """docstring for Network"""
     def __init__(self, sizes):
@@ -64,7 +78,7 @@ class Network(object):
 
     def feedforward(self, a):
         #input -> output
-        for w, b in zip(self.weights, self.biases)
+        for w, b in zip(self.weights, self.biases):
             a = sigmoid(np.dot(w, a) + b)
         return a
 
@@ -79,3 +93,4 @@ def sigmoid(z):
 
 def sigmoid_prime(z):
     return sigmoid(z) * (1 - sigmoid(z))
+'''
