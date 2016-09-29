@@ -6,6 +6,8 @@ Version：1.0 Simple Neural Network
 
 import cPickle
 import gzip
+import numpy as np
+import random
 #======================== Load the MNIST data=========================================
 def load_data():
     
@@ -14,8 +16,8 @@ def load_data():
     f.close()
     return (training_data, validation_data, test_data)
 
-a,b,c = load_data()
-'''
+
+
 #=======================================N N==============================================
 class Network(object):
     """docstring for Network"""
@@ -56,14 +58,15 @@ class Network(object):
         nabla_b = [np.zeros(b.shape) for b in self.biases]
         #feedforward
         activation = x
-        activations.append(x)
+        activations=[x]
+        zs = []
         for w, b in zip(self.weights, self.biases):
             z = np.dot(w, activation) + b 
             zs.append(z)
             activation = sigmoid(z)
             activations.append(activation)
         #back propagation
-        delta[-1] = self.mse_cost_derivative(activations[-1], y)
+        delta = self.mse_cost_derivative(activations[-1], y)
         nabla_b[-1] = delta
         nabla_w[-1] = np.dot(delta, activations[-2].T)
         for L in xrange(2, self.num_layers):
@@ -85,12 +88,20 @@ class Network(object):
     def evaluate(self, test_data):
         # return the num of NN predict correctly
         result_contrast = [(np.argmax(self.feedforward(x)), y) for (x, y) in test_data]
-        return sum(int(x == y) for (x, y) in result_contrast)
+        acc = sum(int(x == y) for (x, y) in result_contrast)
+        print('Accuracy on Test data: %d' %acc)
+        return acc
         
 
 def sigmoid(z):
-    return 1 / (1 + np.exp(-z))
+    return 1.0 / (1 + np.exp(-z))
 
 def sigmoid_prime(z):
-    return sigmoid(z) * (1 - sigmoid(z))
-'''
+    return z * (1 - z)
+
+
+if __name__ == '__main__':
+    training_data, val_data, test_data = load_data()    
+    NN = Network()
+    NN.SGD(training_data, epochs=5, mini_batch_size=32, eta=0.001, test_data=val_data)
+    NN.evaluate(test_data)
