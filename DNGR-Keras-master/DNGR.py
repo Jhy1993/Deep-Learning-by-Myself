@@ -27,13 +27,15 @@ def read_graph(filename,g_type):
 
 def scale_sim_mat(mat):
 	# Scale Matrix by row
+	# 减去对角线元素
 	mat  = mat - np.diag(np.diag(mat))
-	D_inv = np.diag(np.reciprocal(np.sum(mat,axis=0)))
-	mat = np.dot(D_inv,  mat)
+	#np.reciprocal  逐元素计算倒数
+	D_inv = np.diag(np.reciprocal(np.sum(mat, axis=0)))
+	mat = np.dot(D_inv, mat)
 
 	return mat
 
-def random_surfing(adj_matrix,max_step,alpha):
+def random_surfing(adj_matrix, max_step, alpha):
 	# Random Surfing
 	nm_nodes = len(adj_matrix)
 	adj_matrix = scale_sim_mat(adj_matrix)
@@ -73,13 +75,16 @@ def model(data, hidden_layers, hidden_neurons, output_file, validation_split=0.9
 	val_data = data[train_n:,:]
 
 	input_sh = Input(shape=(data.shape[1],))
-	encoded = Dense(data.shape[1], activation='relu',activity_regularizer=regularizers.activity_l1l2(10e-5,10e-5))(input_sh)
+	encoded = Dense(data.shape[1], activation='relu',
+		activity_regularizer=regularizers.activity_l1l2(10e-5,10e-5))(input_sh)
 	encoded = noise.GaussianNoise(0.2)(encoded)
 	for i in range(hidden_layers):
-		encoded = Dense(hidden_neurons[i], activation='relu',activity_regularizer=regularizers.activity_l1l2(10e-5,10e-5))(encoded)
+		encoded = Dense(hidden_neurons[i], activation='relu',
+			activity_regularizer=regularizers.activity_l1l2(10e-5,10e-5))(encoded)
 		encoded = noise.GaussianNoise(0.2)(encoded)
 	for j in range(hidden_layers-1,-1,-1):
-		decoded = Dense(hidden_neurons[i], activation='relu',activity_regularizer=regularizers.activity_l1l2(10e-5,10e-5))(encoded)
+		decoded = Dense(hidden_neurons[i], activation='relu',
+			activity_regularizer=regularizers.activity_l1l2(10e-5,10e-5))(encoded)
 	decoded = Dense(data.shape[1], activation='sigmoid')(decoded)
 
 	autoencoder = Model(input=input_sh, output=decoded)

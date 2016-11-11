@@ -39,7 +39,8 @@ class DataGenerator(object):
 
 
 def Hbeta(D = Math.array([]), beta = 1.0):
-	"""Compute the perplexity and the P-row for a specific value of the precision of a Gaussian distribution."""
+	"""Compute the perplexity and the P-row 
+	for a specific value of the precision of a Gaussian distribution."""
 
 	# Compute P-row and corresponding perplexity
 	P = Math.exp(-D.copy() * beta);
@@ -50,7 +51,10 @@ def Hbeta(D = Math.array([]), beta = 1.0):
 
 
 def x2p(X = Math.array([]), tol = 1e-5, perplexity = 30.0):
-	"""Performs a binary search to get P-values in such a way that each conditional Gaussian has the same perplexity."""
+	"""
+	Performs a binary search to get P-values in such a way 
+	that each conditional Gaussian has the same perplexity.
+	"""
 
 	# Initialize some variables
 	print "Computing pairwise distances..."
