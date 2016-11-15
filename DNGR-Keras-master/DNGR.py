@@ -37,11 +37,12 @@ def scale_sim_mat(mat):
 
 def random_surfing(adj_matrix, max_step, alpha):
 	# Random Surfing
-	nm_nodes = len(adj_matrix)
+	num_nodes = len(adj_matrix)
 	adj_matrix = scale_sim_mat(adj_matrix)
-	P0 = np.eye(nm_nodes, dtype='float32')
-	M = np.zeros((nm_nodes,nm_nodes),dtype='float32')
-	P = np.eye(nm_nodes, dtype='float32')
+	P0 = np.eye(num_nodes, dtype='float32')
+	M = np.zeros((num_nodes,num_nodes),dtype='float32')
+	P = np.eye(num_nodes, dtype='float32')
+	# Update pk in Paper 3.1
 	for i in range(0,max_step):
 		P = alpha*np.dot(P,adj_matrix) + (1-alpha)*P0
 		M = M + P
@@ -51,13 +52,13 @@ def random_surfing(adj_matrix, max_step, alpha):
 def PPMI_matrix(M):
 
 	M = scale_sim_mat(M)
-	nm_nodes = len(M)
+	num_nodes = len(M)
 
-	col_s = np.sum(M, axis=0).reshape(1,nm_nodes)
-	row_s = np.sum(M, axis=1).reshape(nm_nodes,1)
-	D = np.sum(col_s)
-	rowcol_s = np.dot(row_s,col_s)
-	PPMI = np.log(np.divide(D*M,rowcol_s))
+	col_sum = np.sum(M, axis=0).reshape(1,num_nodes)
+	row_sum = np.sum(M, axis=1).reshape(num_nodes,1)
+	D = np.sum(col_sum)
+	rowcol_sum = np.dot(row_sum,col_sum)
+	PPMI = np.log(np.divide(D*M,rowcol_sum))
 	PPMI[np.isnan(PPMI)] = 0.0
 	PPMI[np.isinf(PPMI)] = 0.0
 	PPMI[np.isneginf(PPMI)] = 0.0
@@ -73,7 +74,7 @@ def model(data, hidden_layers, hidden_neurons, output_file, validation_split=0.9
 	batch_size = 50
 	train_data = data[:train_n,:]
 	val_data = data[train_n:,:]
-
+	#data: data_num * data_dim
 	input_sh = Input(shape=(data.shape[1],))
 	encoded = Dense(data.shape[1], activation='relu',
 		activity_regularizer=regularizers.activity_l1l2(10e-5,10e-5))(input_sh)
