@@ -117,7 +117,7 @@ def alias_setup(probs):
 	smaller = []
 	larger = []
 	for kk, prob in enumerate(probs):
-	    q[kk] = K*prob
+	    q[kk] = K * prob
 	    if q[kk] < 1.0:
 	        smaller.append(kk)
 	    else:
