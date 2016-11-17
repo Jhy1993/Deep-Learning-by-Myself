@@ -21,4 +21,4 @@ class jhy():
 if __name__ == '__main__':
     x = jhy(b=10)
     y = x.jia()
-    print y
+    print y * 2
