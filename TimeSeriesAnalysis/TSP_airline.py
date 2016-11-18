@@ -49,3 +49,15 @@ testX, testY = create_dataset(test, look_back)
 # reshape input from [samples, features] to [samples, time steps, features]
 trainX = np.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
 testX = np.reshape(testX, (testX.shape[0], 1, testX.shape[1]))
+
+model = Sequential()
+model.add(LSTM(4, input_dim=look_back))
+model.add(Dense(1))
+model.compile(loss='mse', optimizer='adam')
+model.fit(trainX, trainY, nb_epoch=100, batch_size=1, verbose=2)
+
+trainPredict = model.predict(trainX)
+testPredict = model.predict(testX)
+
+trainPredict = scaler.inverse_transform(trainPredict)
+testPredict = scaler.inverse_transform
