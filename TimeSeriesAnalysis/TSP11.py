@@ -4,7 +4,7 @@ import numpy
 import matplotlib.pyplot as plt
 import pandas
 from keras.models import Sequential
-from keras.layers import Dense
+from keras.layers import Dense, LSTM
 
 # convert an array of values into a dataset matrix
 def create_dataset(dataset, look_back=1):
@@ -24,7 +24,7 @@ numpy.random.seed(7)
 #dataset = dataset.astype('float32')
 filepath = 'C:\Users\Jhy\Desktop\dd\data.xlsx'
 jhy = pandas.read_excel(filepath, header=None)
-dataset = pandas.DataFrame(jhy.ix[1][1:100])
+dataset = pandas.DataFrame(jhy.ix[1][1:200])
 dataset = dataset.values
 dataset = dataset.astype('float32')
 
@@ -35,16 +35,22 @@ train, test = dataset[0:train_size,:], dataset[train_size:len(dataset),:]
 print(len(train), len(test))
 
 # reshape into X=t and Y=t+1
-look_back = 2
+look_back = 4
 trainX, trainY = create_dataset(train, look_back)
 testX, testY = create_dataset(test, look_back)
 
+# reshape input to be [samples, time steps, features]
+trainX = numpy.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
+testX = numpy.reshape(testX, (testX.shape[0], 1, testX.shape[1]))
+
 # create and fit Multilayer Perceptron model
 model = Sequential()
-model.add(Dense(8, input_dim=look_back, activation='relu'))
+model.add(LSTM(8, input_dim=look_back, return_sequences=True))
+model.add(LSTM(8, return_sequences=True))
+model.add(LSTM(8))
 model.add(Dense(1))
 model.compile(loss='mean_squared_error', optimizer='adam')
-model.fit(trainX, trainY, nb_epoch=100, batch_size=2, verbose=2)
+model.fit(trainX, trainY, nb_epoch=200, batch_size=2, verbose=2)
 
 # Estimate model performance
 trainScore = model.evaluate(trainX, trainY, verbose=0)
@@ -67,7 +73,9 @@ testPredictPlot[:, :] = numpy.nan
 testPredictPlot[len(trainPredict)+(look_back*2)+1:len(dataset)-1, :] = testPredict
 
 # plot baseline and predictions
+plt.title(jhy.ix[1][0])
 plt.plot(dataset)
 plt.plot(trainPredictPlot)
 plt.plot(testPredictPlot)
 plt.show()
+

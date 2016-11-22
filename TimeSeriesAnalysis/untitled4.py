@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Nov 16 21:28:24 2016
+Created on Tue Nov 22 13:59:26 2016
 
-@author: Jhy_BISTU
+@author: Jhy_BUPT
+README:
+
 INPUT:
 
 OUTPUT:
@@ -10,15 +12,14 @@ OUTPUT:
 REFERENCE:
 
 """
+filepath = 'C:\\Users\\Jhy\\Desktop\\data.txt'
+data = []
+with open(filepath) as f:
+    lines = f.readlines()
+    for line in lines:
+        temp = line.strip('').split(',')
+        if temp[0] == '222180117136533000':    
+            data.append(temp)
 
-class jhy():
-    def __init__(self, **kwargs):
-        self.a = kwargs.get('a', 1)
-        self.b = kwargs.get('b')
         
-    def jia(self):
-        return self.a + self.b
-if __name__ == '__main__':
-    x = jhy(b=10)
-    y = x.jia()
-    print y * 2
+    
