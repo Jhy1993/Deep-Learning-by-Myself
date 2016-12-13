@@ -92,7 +92,8 @@ if __name__ == '__main__':
     model = DNN()
     X_train, Y_train, X_test, Y_test = get_data()
     model.fit(X_train, Y_train, batch_size=10, nb_epoch=1)
-    
+    model.predict_proba()
+    predict_proba(self, x, batch_size=32, verbose=1)
     #这里以时间片t=1 为例， 测试
     t2 = time.time()
     print ('本次运行时间：{} 秒'.format(t2-t1))
