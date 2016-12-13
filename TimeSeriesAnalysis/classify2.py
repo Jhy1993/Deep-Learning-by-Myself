@@ -26,7 +26,7 @@ import time
 
 #====================1. getdata===============================================
 # =====采用data。txt的数据，可能存在问题：不同t的排名无法比较 所以抛弃=======
-def get_data(filepath = 'C:\\Users\\Jhy\\Desktop\\data\\1.csv'):    
+def get_data(filepath = 'C:\\Users\\Jhy1993\\Desktop\\data\\1.csv'):    
     data = pd.read_csv(filepath, header=None)
 #    data2 = np.array(list(data))
     data2 = np.array(data)
@@ -40,11 +40,25 @@ def get_data(filepath = 'C:\\Users\\Jhy\\Desktop\\data\\1.csv'):
         else:
             X.append(data2[i, 3:])
             Y.append(0)   
+    X = np.array(X)
+    Y = np.array(Y)
+    
     X_train, Y_train, X_test, Y_test = split_data(X, Y)
     return X_train, Y_train, X_test, Y_test
-#X_train, Y_train, X_test, Y_test = get_data()    
+X_train, Y_train, X_test, Y_test = get_data()    
 # 打标签需要对每个文件的排名分别打标签      
 
+import os
+root = 'C:\\Users\\Jhy1993\\Desktop\\data'
+d = []
+for i in os.listdir(root):
+    if os.path.isfile(os.path.join(root, i)):
+        print (i)
+        print (os.path.join(root, i))
+        d.append(os.path.join(root, i))
+        
+import pandas as pd
+dddd = pd.read_csv(d[0], header=None)
 
 
 
@@ -82,6 +96,22 @@ def DNN(input_dim=763):
                   optimizer=sgd,
                   metrics=['accuracy'])
     return model
+    
+
+
+# 对单个时间片进行排序
+t = 测试机中某一个
+
+
+
+def sort_metrics(t, model, folderpath= ):
+    filename = locals()[str(t) + '.csv']
+    filepath = os.path.join(folderpath, filename)
+    data = pd.read_csv(filepath, header=None)
+    isloc
+
+
+    
     
 
 
