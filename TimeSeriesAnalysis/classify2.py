@@ -63,14 +63,23 @@ def get_data(root, split=500):
                 data_test.append(os.path.join(root, i))
     return data_train, data_test
 
-           
+def normal_data(x):
+    # 列： 均值为0， 方差为1
+    # 若数值差距过大，则取log在归一化
+    
+    x = ...
+    return x
+    
+       
 def trans_data(data):
+    # get X, Y and normal
     X = []
     Y = []
     for i in range(0, 2):#####range(len(data)):
         data = pd.read_csv(data_train[i], header=None)
         data = data.values
         data = data.astype('float32')
+        data = normal_data(data)
         for j in range(len(data)):
             X.append(data[j, 3:])
             Y.append(0 if data[j, 2] < 0.5 else 1)
@@ -115,16 +124,28 @@ def train_model(model, X_train, Y_train, X_test, Y_test, batch_size=32,
     print('Test, Score: {}  Test Accuracy: {}'.format(score, acc))
     return model
 
-def save_model(model, )
+def save_model(model, ModelPath, WeightPath):
+    print('start save model...')
+    json_string = model.to_json()
+    fd = open(ModelPath, 'w')
+    fd.write(json_string)
+    fd.close()
+    model.save_weights(WeightPath)
+    print('model is saved.')
+
+
 
     
 if __name__ == '__main__':
     t1 = time.time()
-    root = 'C:\\Users\\Jhy\\Desktop\\data'
+    root = 'C:\\Users\\Jhy1993\\Desktop\\data'
+    ModelPath = ''
+    WeightPath = ''
+    
     data_train, data_test = get_data(root)
     X_train, Y_train = trans_data(data_train)           
     X_test, Y_test = trans_data(data_test)
-    Y_t
+    
     model = DNN()
     train_model(model, X_train, Y_train, X_test, Y_test)
 
