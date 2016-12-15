@@ -98,6 +98,18 @@ def trans_data(datalist):
     Y = np.array(Y)
     return X, Y
 
+def ID_to_label(ID):
+    # 读取  某t某个ID的 的收益/ 排名
+    root = 'C:\\Users\\Jhy1993\\Desktop\\data\\1.csv'
+    x = pd.read_csv(root, header=None)
+    #x2 = x.loc[i] if x
+#    x1 = x.sort_values(0)
+#    xx = x.iloc[1,0]
+    for i in range(len(x)):
+        if x.iloc[i, 0] == ID:
+            x2 = x.iloc[i, 1]
+    return label
+
     
 #for t in range(1, 2):
 #    filename = locals()[str(t) + '.csv']
