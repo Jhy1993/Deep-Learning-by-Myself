@@ -23,7 +23,8 @@ from keras.optimizers import SGD, RMSprop
 from keras.regularizers import l2
 from keras.layers.normalization import BatchNormalization
 import time
-
+from datetime import datetime
+from sklearn.preprocessing import  MinMaxScaler, scale
 #====================1. getdata===============================================
 # =====采用data。txt的数据，存在问题：不同t的排名无法比较 所以抛弃=======
 #def get_data(filepath = 'C:\\Users\\Jhy\\Desktop\\data\\1.csv'):    
@@ -64,25 +65,37 @@ def get_data(root, split=500):
     return data_train, data_test
 
 def normal_data(x):
-    # 列： 均值为0， 方差为1
+    # 列归一化
     # 若数值差距过大，则取log在归一化
-    
-    x = ...
+#    for i in range(x.shape[1]):
+#        m = np.max(x[:,i])
+#        n = np.min(x[:,i])
+#        if m // (n + 1e-10) > 100:
+#            x[:, i] = np.log(x[:, i])
+#            x[:, i] = MinMaxScaler().fit_transform(x[:,i])
+#        else:
+#            x[:, i] = MinMaxScaler().fit_transform(x[:, i])
+    for i in range(x.shape[1]):
+        x = MinMaxScaler().fit_transform(x)
     return x
     
+    
+    
        
-def trans_data(data):
+def trans_data(datalist):
     # get X, Y and normal
     X = []
     Y = []
     for i in range(0, 2):#####range(len(data)):
-        data = pd.read_csv(data_train[i], header=None)
+        data = pd.read_csv(datalist[i], header=None, low_memory=False)
         data = data.values
         data = data.astype('float32')
         data = normal_data(data)
         for j in range(len(data)):
             X.append(data[j, 3:])
             Y.append(0 if data[j, 2] < 0.5 else 1)
+    X = np.array(X)
+    Y = np.array(Y)
     return X, Y
 
     
@@ -109,22 +122,24 @@ def DNN(input_dim=763):
     
     model.add(Dense(1))
     model.add(Activation('sigmoid'))
-    sgd = SGD(lr=0.001, decay=1e-6, momentum=0.9, nesterov=True)
+    sgd = SGD(lr=0.0001, decay=1e-6, momentum=0.9, nesterov=True)
     #model.summary()
     model.compile(loss='binary_crossentropy',
                   optimizer=sgd,
                   metrics=['accuracy'])
     return model
 
-def train_model(model, X_train, Y_train, X_test, Y_test, batch_size=32,
+def train_model(model, X_train, Y_train, X_test, Y_test, batch_size=128,
                 nb_epoch=100):
     model.fit(X_train, Y_train, batch_size=batch_size, shuffle=True,
-              nb_epoch=nb_epoch)
+              nb_epoch=nb_epoch, verbose=2, validation_data=[X_test, Y_test])
     score, acc = model.evaluate(X_test, Y_test, batch_size=batch_size)
     print('Test, Score: {}  Test Accuracy: {}'.format(score, acc))
     return model
 
-def save_model(model, ModelPath, WeightPath):
+def save_model(model,
+               ModelPath='model_' + datetime.now().strftime("%m%d_%H%M") + '.json',
+               WeightPath='model_' + datetime.now().strftime("%m%d_%H%M") + '.h5'):
     print('start save model...')
     json_string = model.to_json()
     fd = open(ModelPath, 'w')
@@ -133,22 +148,26 @@ def save_model(model, ModelPath, WeightPath):
     model.save_weights(WeightPath)
     print('model is saved.')
 
-
+#def pred(model,    ....):
+#    x_path = os.path.join()
+#    x = get_data(root)
+#    pass
 
     
 if __name__ == '__main__':
-    t1 = time.time()
-    root = 'C:\\Users\\Jhy1993\\Desktop\\data'
-    ModelPath = ''
-    WeightPath = ''
-    
+
+    root = 'C:\\Users\\Jhy\\Desktop\\data'
+    ModelPath = 'model_' + datetime.now().strftime("%m%d_%H%M") + '.json'
+    WeightPath = 'model_' + datetime.now().strftime("%m%d_%H%M") + '.h5'
+
     data_train, data_test = get_data(root)
     X_train, Y_train = trans_data(data_train)           
     X_test, Y_test = trans_data(data_test)
     
     model = DNN()
-    train_model(model, X_train, Y_train, X_test, Y_test)
-
+    train_model(model, X_train, Y_train, X_test, Y_test,
+                batch_size=128, nb_epoch=100)
+    save_model(model)
     
     
     

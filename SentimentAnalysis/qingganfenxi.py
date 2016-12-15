@@ -58,6 +58,7 @@ y_test = np.array(list(pn['mark']))[1::2]
 x_train = np.array(list(pn['sent'])) #全集
 y_train = np.array(list(pn['mark']))
 
+'''
 print('Build model...')
 
 model = Sequential()
@@ -77,3 +78,4 @@ classes = model.predict_classes(x_train)
 acc = np_utils.accuracy(classes, y_train)
 print('Test accuracy:', acc)
 score = model.evaluate(x_test, y_test, batch_size=16)
+'''
