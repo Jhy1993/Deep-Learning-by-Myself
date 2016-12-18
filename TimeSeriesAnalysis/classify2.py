@@ -86,14 +86,14 @@ def trans_data(datalist):
     # get X, Y and normal
     X = []
     Y = []
-    for i in range(0, 2):#####range(len(data)):
+    for i in range(0, 3):#####range(len(data)):
         data = pd.read_csv(datalist[i], header=None, low_memory=False)
         data = data.values
         data = data.astype('float32')
         data = normal_data(data)
         for j in range(len(data)):
             X.append(data[j, 3:])
-            Y.append(0 if data[j, 2] < 0.5 else 1)
+            Y.append(0 if data[j, 2] < 0.65 else 1)
     X = np.array(X)
     Y = np.array(Y)
     return X, Y
@@ -131,10 +131,11 @@ def DNN(input_dim=763):
     model.add(BatchNormalization(epsilon=1e-04))
     
     model.add(Dense(200))
+    model.add(Dropout(0.5))
     
     model.add(Dense(1))
     model.add(Activation('sigmoid'))
-    sgd = SGD(lr=0.0001, decay=1e-6, momentum=0.9, nesterov=True)
+    sgd = SGD(lr=0.0005, decay=1e-6, momentum=0.9, nesterov=True)
     #model.summary()
     model.compile(loss='binary_crossentropy',
                   optimizer=sgd,
@@ -146,7 +147,7 @@ def train_model(model, X_train, Y_train, X_test, Y_test, batch_size=128,
     model.fit(X_train, Y_train, batch_size=batch_size, shuffle=True,
               nb_epoch=nb_epoch, verbose=2, validation_data=[X_test, Y_test])
     score, acc = model.evaluate(X_test, Y_test, batch_size=batch_size)
-    print('Test, Score: {}  Test Accuracy: {}'.format(score, acc))
+    print('Test Score: {}  Test Accuracy: {}'.format(score, acc))
     return model
 
 def save_model(model,
@@ -167,7 +168,7 @@ def save_model(model,
 
     
 if __name__ == '__main__':
-
+    t1 = time.time()
     root = 'C:\\Users\\Jhy\\Desktop\\data'
     ModelPath = 'model_' + datetime.now().strftime("%m%d_%H%M") + '.json'
     WeightPath = 'model_' + datetime.now().strftime("%m%d_%H%M") + '.h5'
@@ -178,9 +179,10 @@ if __name__ == '__main__':
     
     model = DNN()
     train_model(model, X_train, Y_train, X_test, Y_test,
-                batch_size=128, nb_epoch=100)
+                batch_size=256, nb_epoch=100)
     save_model(model)
-    
+    t2 = time.time()
+    print('Time Cost: {}'.format(t2 - t1))
     
     
     
