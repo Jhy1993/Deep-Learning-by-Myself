@@ -86,21 +86,54 @@ def trans_data(datalist):
     # get X, Y and normal
     X = []
     Y = []
-    for i in range(0, 3):#####range(len(data)):
+    for i in range(0, 3):#####range(len(datalist)):
         data = pd.read_csv(datalist[i], header=None, low_memory=False)
+#        data = data.sort_values(2, ascending=0)
         data = data.values
         data = data.astype('float32')
         data = normal_data(data)
         for j in range(len(data)):
             X.append(data[j, 3:])
-            Y.append(0 if data[j, 2] < 0.65 else 1)
+            Y.append(1 if j < int(len(data) * 0.35) else 0)
     X = np.array(X)
     Y = np.array(Y)
+#    print(X.shape)
+#    print(Y.shape)
+#    XY = np.hstack((X, Y.T))
+#    print(XY.shape)
+#    np.random.shuffle(XY)
+#    X = XY[:,:-2]
+#    Y = XY[:,-1]
     return X, Y
-
-def ID_to_label(ID):
+    
+def infer_rank(model, t='C:\\Users\\Jhy\\Desktop\\data\\1.csv'):
+    # inference and rank it, return metric 
+    x = pd.read_csv(t, header=None)
+    x = x.values()
+    x = x.astype('float32')
+    result = np.zeros([len(), 2])
+    for i in range(len(x)):
+        result[i, 0] = x[i, 0]
+        result[i, 1] = model.predict_prob(x[i, 3:])
+    result[result[:, 1].argsort()]
+    ID_select = result[0:50, 1]
+    re = []
+    for i in range(len(x)):
+        for ID in ID_select:    
+            if x.iloc[i, 0] == ID:
+                re.append(i)
+    return sum(re) / len(re)
+           
+        
+        
+    
+def ID_to_label(ID=None,
+                root='C:\\Users\\Jhy\\Desktop\\data\\1.csv'):
     # 读取  某t某个ID的 的收益/ 排名
-    root = 'C:\\Users\\Jhy1993\\Desktop\\data\\1.csv'
+#    root = 'C:\\Users\\Jhy1993\\Desktop\\data\\1.csv'
+#    filename = locals()[str(ID) + '.csv'] 
+#    filename =    
+#    filepath = os.path.join(root, filename)
     x = pd.read_csv(root, header=None)
     #x2 = x.loc[i] if x
 #    x1 = x.sort_values(0)
@@ -108,15 +141,14 @@ def ID_to_label(ID):
     for i in range(len(x)):
         if x.iloc[i, 0] == ID:
             x2 = x.iloc[i, 1]
-    return label
-
-    
+    return x
+#jhy = ID_to_label(501)
+#    
 #for t in range(1, 2):
 #    filename = locals()[str(t) + '.csv']
 #    filepath = os.path.join(root, filename)
 #    data = pd.read_csv(filepath, header=None)
-#    
-#dddd = pd.read_csv(d[0], header=None)
+
 def DNN(input_dim=763):
     model = Sequential()
     
@@ -166,7 +198,7 @@ def save_model(model,
 #    x = get_data(root)
 #    pass
 
-    
+ 
 if __name__ == '__main__':
     t1 = time.time()
     root = 'C:\\Users\\Jhy\\Desktop\\data'
@@ -176,7 +208,7 @@ if __name__ == '__main__':
     data_train, data_test = get_data(root)
     X_train, Y_train = trans_data(data_train)           
     X_test, Y_test = trans_data(data_test)
-    
+    '''
     model = DNN()
     train_model(model, X_train, Y_train, X_test, Y_test,
                 batch_size=256, nb_epoch=100)
@@ -205,6 +237,7 @@ def split_data(X, Y, rate=0.7):
     X_test = X[sp:]
     Y_test = Y[sp:]
     return X_train, Y_train, X_test, Y_test
+'''
     
 '''
 #=========================2. 定义模型========================================
