@@ -11,5 +11,6 @@ REFERENCE:
     
 """
 
+import tensorflow as tf
 a = 1
-print a
+

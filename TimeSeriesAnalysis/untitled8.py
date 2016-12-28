@@ -37,8 +37,9 @@ xx = x.iloc[1,2]
 #for i in range(len(x)):
 #    if x.iloc[i, 0] == 5:
 #        x2 = x.iloc[i, 1]
-#print(x2)
+print(x2)
 #
+
 
 
 
