@@ -106,7 +106,7 @@ def trans_data(datalist):
 #    Y = XY[:,-1]
     return X, Y
     
-def infer_rank(model, t='C:\\Users\\Jhy\\Desktop\\data\\1.csv'):
+def infer_rank(model, t='C:\\Users\\Jhy\\Desktop\\data\\501.csv'):
     # inference and rank it, return metric 
     x = pd.read_csv(t, header=None)
     x = x.values()
@@ -201,7 +201,8 @@ def save_model(model,
  
 if __name__ == '__main__':
     t1 = time.time()
-    root = 'C:\\Users\\Jhy\\Desktop\\data'
+#    root = 'C:\\Users\\Jhy\\Desktop\\data'
+    root = '../data'
     ModelPath = 'model_' + datetime.now().strftime("%m%d_%H%M") + '.json'
     WeightPath = 'model_' + datetime.now().strftime("%m%d_%H%M") + '.h5'
 
