@@ -28,18 +28,7 @@ from keras.layers.normalization import BatchNormalization
 
 root = 'C:\\Users\\Jhy\\Desktop\\data\\1.csv'
 x = pd.read_csv(root, header=None)
-#xx = x.sort()
-#x2 = x.loc[i] if x
-x1 = x.sort_values(2, ascending=0)
-i = int(x1.shape[0] * 0.35)
-x_zheng = x1[0:i]
-xx = x.iloc[1,2]
-#for i in range(len(x)):
-#    if x.iloc[i, 0] == 5:
-#        x2 = x.iloc[i, 1]
-print(x2)
-#
-
+xx = x[[0, 1, 2]]
 
 
 

@@ -15,11 +15,19 @@ REFERENCE:
 #from tensorflow.examples.tutorials.mnist import input_data
 #mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
 import numpy as np
-x = np.array([[1, 1, 3], [4,5,9]])
-mm = np.max(x[:,2])
-print(mm)
-print(x)
-for i in range(x.shape[1]):
-    m = np.max(x[:,i])
-    x[:,i] /= m
-print(x)
+import pandas as pd
+a= [11, 2, 5, 3, 2, 0]
+b = [1,2 , 3, 4, 5, 6]
+x = []
+y = []
+for i in range(len(a)):
+    for j in range(0, 2):
+        x.append(a[j])
+    for k in range(-2, 0):
+        print(k)
+        y.append(b[k])
+        
+#print(x)
+#print(y)
+for k in range(-2):
+    print(k)
