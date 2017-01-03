@@ -89,6 +89,7 @@ def trans_data(datalist):
     for i in range(0, 3):#####range(len(datalist)):
         data = pd.read_csv(datalist[i], header=None, low_memory=False)
 #        data = data.sort_values(2, ascending=0)
+        data = data.sort([2], ascending=[0])
         data = data.values
         data = data.astype('float32')
         data = normal_data(data)
@@ -109,7 +110,8 @@ def trans_data(datalist):
 def infer_rank(model, t='C:\\Users\\Jhy\\Desktop\\data\\501.csv'):
     # inference and rank it, return metric 
     x = pd.read_csv(t, header=None)
-    x = x.values()
+    x = x.sort([2], ascending=[0])
+    x = x.values
     x = x.astype('float32')
     result = np.zeros([len(), 2])
     for i in range(len(x)):
@@ -135,6 +137,7 @@ def ID_to_label(ID=None,
 #    filename =    
 #    filepath = os.path.join(root, filename)
     x = pd.read_csv(root, header=None)
+    x = x.sort([2], ascending=[0])
     #x2 = x.loc[i] if x
 #    x1 = x.sort_values(0)
 #    xx = x.iloc[1,0]
