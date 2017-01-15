@@ -17,13 +17,15 @@ import numpy as np
 import pandas as pd
 import os
 
-root = 'C:\\Users\\Jhy1993\\Desktop\\data'
+root = 'C:\\Users\\Jhy\\Desktop\\d2'
 data = pd.DataFrame()
 filelist = []
 for i in os.listdir(root):
-    print(i)
+    t = i.split('.')[0]
+    
     filepath = os.path.join(root, i)
     temp = pd.read_csv(filepath, header=None, low_memory=False)
+    temp[1] = t
     filelist.append(temp)
 data = pd.concat(filelist, ignore_index=True)
 ID_count = data[0].value_counts()
