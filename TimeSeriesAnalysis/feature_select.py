@@ -28,7 +28,7 @@ from keras.layers.normalization import BatchNormalization
 
 
 
-root = 'C:\\Users\\Jhy\\Desktop\\data\\1.csv'
+root = 'C:\\Users\\Jhy1993\\Desktop\\data\\1.csv'
 data = pd.read_csv(root, header=None)
 data_descirbe = data.describe()
 fea_des = data_descirbe.iloc[:, range(3, data_descirbe.shape[1])]
@@ -48,8 +48,21 @@ fea_des = fea.describe()
 n_sigma = 2
 upbound = fea_des.ix[1] + n_sigma * fea_des[2]
 lowbound = fea_des.ix[1] - n_sigma * fea_des[2]
-fea[fea > upbound ] = 136
-fea[fea < lowbound] = 1
+
+fea2_np = np.asarray(fea.sort_values()).astype('float32')
+
+max_list = np.where(fea2_np > upbound)
+if len(max_list[0]) >0:
+    up_val = fea2_np[max_list[0][0] - 1]
+    fea[fea > upbound ] = up_val
+ 
+min_list = np.where(fea2_np < lowbound)
+if len(min_list[0]) > 0:
+    low_val = fea2_np[min_list[0][0] - 1]
+    fea[fea < lowbound] = low_val
+
+
+
 
 plt.figure()
 plt.plot(fea)
